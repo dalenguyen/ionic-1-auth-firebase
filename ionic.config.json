@@ -1,0 +1,15 @@
+{
+  "name": "FirebaseAuth",
+  "app_id": "18a4ea30",
+  "type": "ionic1",
+  "integrations": {
+    "gulp": {},
+    "cordova": {}
+  },
+  "watchPatterns": [
+    "scss/**/*",
+    "www/**/*",
+    "!www/lib/**/*",
+    "!www/**/*.map"
+  ]
+}
