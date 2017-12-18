@@ -1,0 +1,31 @@
+<ion-view title="Login">
+  <ion-nav-title>
+      <img src="img/header.png" width="auto" height="65">
+  </ion-nav-title>
+    <ion-content overflow-scroll="true" class="has-header loginview">
+      <div class="padding login-content-wrap">
+        <h3>Sign in</h3>
+        <form class="list">
+            <label class="item item-input item-floating-label" name="email">
+                <span class="input-label">Email</span>
+                <input type="email" placeholder="Email" ng-model="data.username" >
+            </label>
+            <label class="item item-input item-floating-label" name="password">
+                <span class="input-label">Password</span>
+                <input type="password" placeholder="Password" ng-model="data.password" >
+            </label>
+            <button class="button button-energized button-block login-btn" ng-click="login()" >Log in</button>
+        </form>
+        <div class="forgot-password">
+          <h5>Trouble signing in?</h5>
+          <a ui-sref="resetPassword" class="button button-clear icon-right ion-arrow-right-c">Reset your password</a>
+        </div>
+      </div>
+      <div class="login-footer">
+        <h5>Dont have an account?</h5>
+        <div class="button-wrap">
+          <a ng-click="goToAndClear('signup')" class="button button-outline button-block ">Sign up</a>
+        </div>
+      </div>
+    </ion-content>
+</ion-view>
