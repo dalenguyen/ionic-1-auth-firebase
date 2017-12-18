@@ -11,6 +11,11 @@
   "dependencies": {
     "@ionic/pro": "1.0.16",
     "angularfire2": "^5.0.0-rc.4",
-    "firebase": "^4.8.0"
+    "bower": "^1.8.2",
+    "firebase": "^4.8.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-connect": "^5.0.0",
+    "gulp-minify-css": "^1.2.4",
+    "shelljs": "^0.7.8"
   }
 }
