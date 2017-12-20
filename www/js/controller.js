@@ -168,6 +168,43 @@ angular.module('bucketList.controllers', [])
       $rootScope.hide();
     };
   })
+  .controller('completedCtrl', function($rootScope, $scope, $window, $firebase){
+    $rootScope.show('Please wait... Processing');
+    $scope.list = [];
+
+    var bucketListRef = new Firebase($rootScope.baseUrl + escapeEmailAddress($rootScope.userEmail));
+    bucketListRef.on('value', function(snapshot){
+      $scope.list = [];
+      var data = snapshot.val();
+
+      for (var key in data){
+        if(data.hasOwnProperty(key)){
+          if(data[key].isCompleted == true){
+            data[key].key = key;
+          }
+        }
+      }
+      if($scope.list.length == 0){
+        $scope.noData = true;
+      } else {
+        $scope.noData = false;
+      }
+    });
+
+    $scope.deleteItem = function(key){
+      $rootScope.show('Please wait... Deleting from List');
+      var itemRef = new Firebase($rootScope.baseUrl + escapeEmailAddress($rootScope.userEmail));
+      bucketListRef.child(key).remove(function(error){
+        if (error) {
+          $rootScope.hide();
+          $rootScope.notify('Oops! something went wrong. Try again later');
+        } else {
+          $rootScope.hide();
+          $rootScope.notify('Successfully deleted');
+        }
+      });
+    };
+  });
 
 function escapeEmailAddress(email) {
   if (!email) return false
