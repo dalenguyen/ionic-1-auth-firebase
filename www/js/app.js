@@ -1,7 +1,7 @@
 angular.module('bucketList', ['ionic', 'firebase', 'bucketList.controllers'])
 
 .run(function($ionicPlatform, $rootScope, $firebaseAuth, $firebase, $window, $ionicLoading) {
-    $ionicPlatform.ready(function() {
+    $ionicPlatform.ready(function() { // @todo change to $ionicPlatform for production
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
         if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -15,6 +15,20 @@ angular.module('bucketList', ['ionic', 'firebase', 'bucketList.controllers'])
 
         firebase.initializeApp(config);
         $rootScope.userEmail = null;
+
+        // Check user session
+        firebase.auth().onAuthStateChanged(function(user) {
+          if (user) {
+            // User is signed in.
+            console.log(user.email);
+            // user authenticated with Firebase
+            $rootScope.userEmail = user.email;
+            // $window.location.href = ('#/bucket/list');
+          } else {
+            // User is signed out.            
+            console.log('User is signed out');
+          }
+        });
 
         $rootScope.show = function(text) {
             $rootScope.loading = $ionicLoading.show({
@@ -41,25 +55,12 @@ angular.module('bucketList', ['ionic', 'firebase', 'bucketList.controllers'])
             $rootScope.auth.$logout();
             $rootScope.checkSession();
         };
-
-        $rootScope.checkSession = function() {
-            var auth = new FirebaseSimpleLogin(authRef, function(error, user) {
-                if (error) {
-                    // no action yet.. redirect to default route
-                    $rootScope.userEmail = null;
-                    $window.location.href = '#/auth/signin';
-                } else if (user) {
-                    // user authenticated with Firebase
-                    $rootScope.userEmail = user.email;
-                    $window.location.href = ('#/bucket/list');
-                } else {
-                    // user is logged out
-                    $rootScope.userEmail = null;
-                    $window.location.href = '#/auth/signin';
-                }
-            });
-        };
     });
+
+    // @todo should be removed after testing
+    $rootScope.checkSession = function() {
+      console.log('Check session');
+    }
 })
 
 .config(function($stateProvider, $urlRouterProvider) {

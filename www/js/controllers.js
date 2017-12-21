@@ -3,7 +3,7 @@ angular.module('bucketList.controllers', [])
     '$scope', '$rootScope', '$firebaseAuth', '$window',
     function($scope, $rootScope, $firebaseAuth, $window) {
         // check session
-        // $rootScope.checkSession();
+        $rootScope.checkSession();      
 
         $scope.user = {
             email: "",
