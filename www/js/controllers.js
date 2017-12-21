@@ -1,36 +1,32 @@
 angular.module('bucketList.controllers', [])
-    .controller('SignInCtrl', [
-        '$scope', '$rootScope', '$firebaseAuth', '$window',
-        function($scope, $rootScope, $firebaseAuth, $window) {
-            // check session
-            // $rootScope.checkSession();
+.controller('SignInCtrl', [
+    '$scope', '$rootScope', '$firebaseAuth', '$window',
+    function($scope, $rootScope, $firebaseAuth, $window) {
+        // check session
+        // $rootScope.checkSession();
 
-            $scope.user = {
-                email: "",
-                password: ""
-            };
-            $scope.validateUser = function() {
-                $rootScope.show('Please wait.. Authenticating');
-                var email = this.user.email;
-                var password = this.user.password;
-                if (!email || !password) {
-                    $rootScope.notify("Please enter valid credentials");
-                    return false;
-                }
+        $scope.user = {
+            email: "",
+            password: ""
+        };
+        $scope.validateUser = function() {
+            $rootScope.show('Please wait.. Authenticating');
+            var email = this.user.email;
+            var password = this.user.password;
 
-                firebase.auth().signInWithEmailAndPassword(email, password)
-                .then(auth => {
-                  $rootScope.hide();
-                  $rootScope.userEmail = email;
-                  $window.location.href = ('#/bucket/list');
-                })
-                .catch(function(error) {
-                  $rootScope.hide();
-                  $rootScope.notify(error.message);                  
-                });
-            }
+            firebase.auth().signInWithEmailAndPassword(email, password)
+            .then(auth => {
+              $rootScope.hide();
+              $rootScope.userEmail = email;
+              $window.location.href = ('#/bucket/list');
+            })
+            .catch(function(error) {
+              $rootScope.hide();
+              $rootScope.notify(error.message);
+            });
         }
-    ])
+    }
+])
 
 .controller('SignUpCtrl', [
     '$scope', '$rootScope', '$firebaseAuth', '$window',
@@ -38,34 +34,37 @@ angular.module('bucketList.controllers', [])
 
         $scope.user = {
             email: "",
-            password: ""
+            password: "",
+            passwordRetyped: ""
         };
+
         $scope.createUser = function() {
             var email = this.user.email;
             var password = this.user.password;
-            if (!email || !password) {
-                $rootScope.notify("Please enter valid credentials");
-                return false;
-            }
-            $rootScope.show('Please wait.. Registering');
+            var passwordRetyped = this.user.passwordRetyped;
 
-            $rootScope.auth.$createUser(email, password, function(error, user) {
-                if (!error) {
-                    $rootScope.hide();
-                    $rootScope.userEmail = user.email;
-                    $window.location.href = ('#/bucket/list');
-                } else {
-                    $rootScope.hide();
-                    if (error.code == 'INVALID_EMAIL') {
-                        $rootScope.notify('Invalid Email Address');
-                    } else if (error.code == 'EMAIL_TAKEN') {
-                        $rootScope.notify('Email Address already taken');
-                    } else {
-                        $rootScope.notify('Oops something went wrong. Please try again later');
-                    }
-                }
-            });
+            if(password !== passwordRetyped){
+              $rootScope.notify('Your password and your re-entered password does not match each other.');
+              return;
+            }
+
+            $rootScope.show('Please wait... Registering');
+
+            // firebase signup code
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then(auth => {
+              // Could do something with the Auth-Response
+              $rootScope.hide();
+              $rootScope.userEmail = email;
+              $window.location.href = ('#/bucket/list');
+            })
+            .catch(error => {
+              $rootScope.hide();
+              console.log(error.message);
+              $rootScope.notify(error.message);
+            })
         }
+
     }
 ])
 

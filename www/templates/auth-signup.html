@@ -12,7 +12,11 @@
       <input type="password" ng-model="user.password">
     </label>
     <label class="item item-input">
-      <button class="button button-block button-positive" ng-click="createUser()">
+      <span class="input-label">Password Retyped</span>
+      <input type="password" ng-model="user.passwordRetyped">
+    </label>
+    <label class="item item-input">
+      <button class="button button-block button-positive" ng-disabled="!user.email || !user.password || !user.passwordRetyped" ng-click="createUser()">
         Sign Up
       </button>
     </label>
