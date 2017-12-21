@@ -4,6 +4,9 @@
 # Removed bower generated files
 www/lib/
 
+# Remove environment variable
+www/js/env.js
+
 *~
 *.sw[mnpcod]
 *.log

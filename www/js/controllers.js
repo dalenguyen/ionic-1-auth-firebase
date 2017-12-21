@@ -3,7 +3,7 @@ angular.module('bucketList.controllers', [])
         '$scope', '$rootScope', '$firebaseAuth', '$window',
         function($scope, $rootScope, $firebaseAuth, $window) {
             // check session
-            $rootScope.checkSession();
+            // $rootScope.checkSession();
 
             $scope.user = {
                 email: "",
@@ -18,24 +18,15 @@ angular.module('bucketList.controllers', [])
                     return false;
                 }
 
-                $rootScope.auth.$login('password', {
-                    email: email,
-                    password: password
-                }).then(function(user) {
-                    $rootScope.hide();
-                    $rootScope.userEmail = user.email;
-                    $window.location.href = ('#/bucket/list');
-                }, function(error) {
-                    $rootScope.hide();
-                    if (error.code == 'INVALID_EMAIL') {
-                        $rootScope.notify('Invalid Email Address');
-                    } else if (error.code == 'INVALID_PASSWORD') {
-                        $rootScope.notify('Invalid Password');
-                    } else if (error.code == 'INVALID_USER') {
-                        $rootScope.notify('Invalid User');
-                    } else {
-                        $rootScope.notify('Oops something went wrong. Please try again later');
-                    }
+                firebase.auth().signInWithEmailAndPassword(email, password)
+                .then(auth => {
+                  $rootScope.hide();
+                  $rootScope.userEmail = email;
+                  $window.location.href = ('#/bucket/list');
+                })
+                .catch(function(error) {
+                  $rootScope.hide();
+                  $rootScope.notify(error.message);                  
                 });
             }
         }

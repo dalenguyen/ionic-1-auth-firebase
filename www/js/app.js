@@ -11,10 +11,10 @@ angular.module('bucketList', ['ionic', 'firebase', 'bucketList.controllers'])
             StatusBar.styleDefault();
         }
 
+        var config = $window.__env;
+
+        firebase.initializeApp(config);
         $rootScope.userEmail = null;
-        $rootScope.baseUrl = 'https://bucketlist-app.firebaseio.com/';
-        var authRef = new Firebase($rootScope.baseUrl);
-        $rootScope.auth = $firebaseAuth(authRef);
 
         $rootScope.show = function(text) {
             $rootScope.loading = $ionicLoading.show({
@@ -58,7 +58,7 @@ angular.module('bucketList', ['ionic', 'firebase', 'bucketList.controllers'])
                     $window.location.href = '#/auth/signin';
                 }
             });
-        }
+        };
     });
 })
 

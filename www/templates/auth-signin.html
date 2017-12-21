@@ -12,7 +12,7 @@
       <input type="password" ng-model="user.password">
     </label>
     <label class="item item-input">
-      <button class="button button-block button-positive" ng-click="validateUser()">Sign In</button>
+      <button class="button button-block button-positive" ng-click="validateUser()" ng-disabled="!user.email || !user.password">Sign In</button>
     </label>
   </div>
 </ion-content>
