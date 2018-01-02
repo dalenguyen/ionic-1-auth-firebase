@@ -70,6 +70,7 @@ angular.module('bucketList.controllers', [])
 
 .controller('myListCtrl', function($rootScope, $scope, $window, $ionicModal, $firebase) {
     // $rootScope.show("Please wait... Processing");
+
     $scope.list = [];
 
     console.log($rootScope.userEmail);
@@ -107,17 +108,20 @@ angular.module('bucketList.controllers', [])
     };
 
     $scope.markCompleted = function(key) {
-        $rootScope.show("Please wait... Updating List");
-        var itemRef = new Firebase($rootScope.baseUrl + escapeEmailAddress($rootScope.userEmail) + '/' + key);
+        // $rootScope.show("Please wait... Updating List");
+        console.log(escapeEmailAddress($rootScope.userEmail));
+        var itemRef = $rootScope.databaseRef.ref('bucketList/' + escapeEmailAddress($rootScope.userEmail));
+
         itemRef.update({
-            isCompleted: true
+          isCompleted: true
         }, function(error) {
             if (error) {
+                console.log(error);
                 $rootScope.hide();
-                $rootScope.notify('Oops! something went wrong. Try again later');
+                // $rootScope.notify('Oops! something went wrong. Try again later');
             } else {
                 $rootScope.hide();
-                $rootScope.notify('Successfully updated');
+                // $rootScope.notify('Successfully updated');
             }
         });
     };
@@ -163,7 +167,7 @@ angular.module('bucketList.controllers', [])
 })
 
 .controller('completedCtrl', function($rootScope, $scope, $window, $firebase) {
-    $rootScope.show("Please wait... Processing");
+    // $rootScope.show("Please wait... Processing");
     $scope.list = [];
 
     var bucketListRef = new Firebase($rootScope.baseUrl + escapeEmailAddress($rootScope.userEmail));
