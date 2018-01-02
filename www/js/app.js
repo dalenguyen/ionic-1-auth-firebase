@@ -16,16 +16,19 @@ angular.module('bucketList', ['ionic', 'firebase', 'bucketList.controllers'])
         firebase.initializeApp(config);
         $rootScope.userEmail = null;
 
+        // Inistializze database
+        $rootScope.databaseRef = firebase.database();
+
         // Check user session
         firebase.auth().onAuthStateChanged(function(user) {
           if (user) {
             // User is signed in.
-            console.log(user.email);
             // user authenticated with Firebase
             $rootScope.userEmail = user.email;
-            // $window.location.href = ('#/bucket/list');
+            console.log($rootScope.userEmail);
+            $window.location.href = ('#/bucket/list');
           } else {
-            // User is signed out.            
+            // User is signed out.
             console.log('User is signed out');
           }
         });

@@ -3,7 +3,7 @@ angular.module('bucketList.controllers', [])
     '$scope', '$rootScope', '$firebaseAuth', '$window',
     function($scope, $rootScope, $firebaseAuth, $window) {
         // check session
-        $rootScope.checkSession();      
+        $rootScope.checkSession();
 
         $scope.user = {
             email: "",
@@ -69,29 +69,34 @@ angular.module('bucketList.controllers', [])
 ])
 
 .controller('myListCtrl', function($rootScope, $scope, $window, $ionicModal, $firebase) {
-    $rootScope.show("Please wait... Processing");
+    // $rootScope.show("Please wait... Processing");
     $scope.list = [];
-    var bucketListRef = new Firebase($rootScope.baseUrl + escapeEmailAddress($rootScope.userEmail));
-    bucketListRef.on('value', function(snapshot) {
-        var data = snapshot.val();
-        $scope.list = [];
-        for (var key in data) {
-            if (data.hasOwnProperty(key)) {
-                if (data[key].isCompleted == false) {
-                    data[key].key = key;
-                    $scope.list.push(data[key]);
-                }
-            }
-        }
 
-        if ($scope.list.length == 0) {
-            $scope.noData = true;
-        } else {
-            $scope.noData = false;
-        }
-        $rootScope.hide();
-    });
+    console.log($rootScope.userEmail);
 
+    console.log($rootScope.databaseRef);
+
+    var bucketListRef = $rootScope.databaseRef.ref('bucketList/');
+    bucketListRef.on('value', function(snapshot){
+      console.log(snapshot.val());
+      var data = snapshot.val();
+      $scope.list = [];
+      for (var key in data) {
+          if (data.hasOwnProperty(key)) {
+              if (data[key].isCompleted == false) {
+                  data[key].key = key;
+                  $scope.list.push(data[key]);
+              }
+          }
+      }
+
+      if ($scope.list.length == 0) {
+          $scope.noData = true;
+      } else {
+          $scope.noData = false;
+      }
+      $rootScope.hide();
+    })
 
     $ionicModal.fromTemplateUrl('templates/newItem.html', function(modal) {
         $scope.newTemplate = modal;
@@ -149,15 +154,9 @@ angular.module('bucketList.controllers', [])
 
         $rootScope.show("Please wait... Creating new");
 
-        var form = {
-            item: item,
-            isCompleted: false,
-            created: Date.now(),
-            updated: Date.now()
-        };
-
-        var bucketListRef = new Firebase($rootScope.baseUrl + escapeEmailAddress($rootScope.userEmail));
-        $firebase(bucketListRef).$add(form);
+        var email = escapeEmailAddress($rootScope.userEmail);
+        var bucketListRef = $rootScope.databaseRef;
+        writeBucketItem(bucketListRef, email, item);
         $rootScope.hide();
 
     };
@@ -211,4 +210,13 @@ function escapeEmailAddress(email) {
     email = email.toLowerCase();
     email = email.replace(/\./g, ',');
     return email.trim();
+}
+
+function writeBucketItem(bucketListRef, email, item){
+  bucketListRef.ref('bucketList/' + email).set({
+    item: item,
+    isCompleted: false,
+    created: Date.now(),
+    updated: Date.now()
+  });
 }
