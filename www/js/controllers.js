@@ -77,12 +77,13 @@ angular.module('bucketList.controllers', [])
 
     console.log($rootScope.databaseRef);
 
-    var bucketListRef = $rootScope.databaseRef.ref('bucketList/');
+    var bucketListRef = $rootScope.databaseRef.ref('bucketList/' + escapeEmailAddress($rootScope.userEmail));
     bucketListRef.on('value', function(snapshot){
       console.log(snapshot.val());
       var data = snapshot.val();
       $scope.list = [];
       for (var key in data) {
+          console.log(key);
           if (data.hasOwnProperty(key)) {
               if (data[key].isCompleted == false) {
                   data[key].key = key;
@@ -90,6 +91,8 @@ angular.module('bucketList.controllers', [])
               }
           }
       }
+
+      console.log($scope.list);
 
       if ($scope.list.length == 0) {
           $scope.noData = true;
@@ -127,9 +130,9 @@ angular.module('bucketList.controllers', [])
     };
 
     $scope.deleteItem = function(key) {
-        $rootScope.show("Please wait... Deleting from List");
-        var itemRef = new Firebase($rootScope.baseUrl + escapeEmailAddress($rootScope.userEmail));
-        bucketListRef.child(key).remove(function(error) {
+        // $rootScope.show("Please wait... Deleting from List");
+        var itemRef = $rootScope.databaseRef.ref('bucketList/' + escapeEmailAddress($rootScope.userEmail));
+        itemRef.child(key).remove(function(error) {
             if (error) {
                 $rootScope.hide();
                 $rootScope.notify('Oops! something went wrong. Try again later');
@@ -170,30 +173,31 @@ angular.module('bucketList.controllers', [])
     // $rootScope.show("Please wait... Processing");
     $scope.list = [];
 
-    var bucketListRef = new Firebase($rootScope.baseUrl + escapeEmailAddress($rootScope.userEmail));
-    bucketListRef.on('value', function(snapshot) {
-        $scope.list = [];
-        var data = snapshot.val();
+    var bucketListRef = $rootScope.databaseRef.ref('bucketList/');
+    bucketListRef.on('value', function(snapshot){
+      console.log(snapshot.val());
+      var data = snapshot.val();
+      $scope.list = [];
+      for (var key in data) {
+          if (data.hasOwnProperty(key)) {
+              if (data[key].isCompleted == true) {
+                  data[key].key = key;
+                  $scope.list.push(data[key]);
+              }
+          }
+      }
 
-        for (var key in data) {
-            if (data.hasOwnProperty(key)) {
-                if (data[key].isCompleted == true) {
-                    data[key].key = key;
-                    $scope.list.push(data[key]);
-                }
-            }
-        }
-        if ($scope.list.length == 0) {
-            $scope.noData = true;
-        } else {
-            $scope.noData = false;
-        }
-
-        $rootScope.hide();
+      if ($scope.list.length == 0) {
+          $scope.noData = true;
+      } else {
+          $scope.noData = false;
+      }
+      $rootScope.hide();
     });
 
     $scope.deleteItem = function(key) {
         $rootScope.show("Please wait... Deleting from List");
+
         var itemRef = new Firebase($rootScope.baseUrl + escapeEmailAddress($rootScope.userEmail));
         bucketListRef.child(key).remove(function(error) {
             if (error) {
@@ -217,7 +221,7 @@ function escapeEmailAddress(email) {
 }
 
 function writeBucketItem(bucketListRef, email, item){
-  bucketListRef.ref('bucketList/' + email).set({
+  bucketListRef.ref('bucketList/' + email).push({
     item: item,
     isCompleted: false,
     created: Date.now(),
