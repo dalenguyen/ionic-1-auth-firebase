@@ -1,5 +1,9 @@
 /* Empty. Add your own CSS if you like */
 
+.view-container{
+  z-index: 10;
+}
+
 .margin {
   margin-left: 9px;
   margin-right: 9px;

@@ -113,7 +113,7 @@ angular.module('bucketList.controllers', [])
     $scope.markCompleted = function(key) {
         // $rootScope.show("Please wait... Updating List");
         console.log(escapeEmailAddress($rootScope.userEmail));
-        var itemRef = $rootScope.databaseRef.ref('bucketList/' + escapeEmailAddress($rootScope.userEmail));
+        var itemRef = $rootScope.databaseRef.ref('bucketList/' + escapeEmailAddress($rootScope.userEmail) + '/' + key);
 
         itemRef.update({
           isCompleted: true
@@ -173,7 +173,7 @@ angular.module('bucketList.controllers', [])
     // $rootScope.show("Please wait... Processing");
     $scope.list = [];
 
-    var bucketListRef = $rootScope.databaseRef.ref('bucketList/');
+    var bucketListRef = $rootScope.databaseRef.ref('bucketList/' + escapeEmailAddress($rootScope.userEmail));
     bucketListRef.on('value', function(snapshot){
       console.log(snapshot.val());
       var data = snapshot.val();
