@@ -30,6 +30,7 @@ angular.module('bucketList', ['ionic', 'firebase', 'bucketList.controllers'])
           } else {
             // User is signed out.
             console.log('User is signed out');
+            $window.location.href = ('#/auth/signin');
           }
         });
 
@@ -55,7 +56,8 @@ angular.module('bucketList', ['ionic', 'firebase', 'bucketList.controllers'])
         };
 
         $rootScope.logout = function() {
-            $rootScope.auth.$logout();
+            console.log('Logging out...');
+            firebase.auth().signOut();
             $rootScope.checkSession();
         };
     });

@@ -135,10 +135,10 @@ angular.module('bucketList.controllers', [])
         itemRef.child(key).remove(function(error) {
             if (error) {
                 $rootScope.hide();
-                $rootScope.notify('Oops! something went wrong. Try again later');
+                // $rootScope.notify('Oops! something went wrong. Try again later');
             } else {
                 $rootScope.hide();
-                $rootScope.notify('Successfully deleted');
+                // $rootScope.notify('Successfully deleted');
             }
         });
     };
