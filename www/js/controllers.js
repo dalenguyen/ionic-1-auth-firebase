@@ -198,14 +198,14 @@ angular.module('bucketList.controllers', [])
     $scope.deleteItem = function(key) {
         $rootScope.show("Please wait... Deleting from List");
 
-        var itemRef = new Firebase($rootScope.baseUrl + escapeEmailAddress($rootScope.userEmail));
-        bucketListRef.child(key).remove(function(error) {
+        var itemRef = $rootScope.databaseRef.ref('bucketList/' + escapeEmailAddress($rootScope.userEmail));
+        itemRef.child(key).remove(function(error) {
             if (error) {
                 $rootScope.hide();
-                $rootScope.notify('Oops! something went wrong. Try again later');
+                // $rootScope.notify('Oops! something went wrong. Try again later');
             } else {
                 $rootScope.hide();
-                $rootScope.notify('Successfully deleted');
+                // $rootScope.notify('Successfully deleted');
             }
         });
     };
